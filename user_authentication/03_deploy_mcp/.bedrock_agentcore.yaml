@@ -1,0 +1,35 @@
+default_agent: blogpost_mcp_simple_calculator
+agents:
+  blogpost_mcp_simple_calculator:
+    name: blogpost_mcp_simple_calculator
+    entrypoint: blogpost_mcp_server.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::***REMOVED***:role/AmazonBedrockAgentCoreSDKRuntime-eu-central-1-28d23bd93f
+      execution_role_auto_create: false
+      account: '***REMOVED***'
+      region: eu-central-1
+      ecr_repository: ***REMOVED***.dkr.ecr.eu-central-1.amazonaws.com/bedrock-agentcore-blogpost_mcp_simple_calculator
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: MCP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: blogpost_mcp_simple_calculator-9EIzoU5PdV
+      agent_arn: arn:aws:bedrock-agentcore:eu-central-1:***REMOVED***:runtime/blogpost_mcp_simple_calculator-9EIzoU5PdV
+      agent_session_id: null
+    codebuild:
+      project_name: bedrock-agentcore-blogpost_mcp_simple_calculator-builder
+      execution_role: arn:aws:iam::***REMOVED***:role/AmazonBedrockAgentCoreSDKCodeBuild-eu-central-1-28d23bd93f
+      source_bucket: bedrock-agentcore-codebuild-sources-***REMOVED***-eu-central-1
+    authorizer_configuration:
+      customJWTAuthorizer:
+        discoveryUrl: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_KtQmvSpqD/.well-known/openid-configuration
+        allowedClients:
+        - 2plh7conbdbvsgsekmvabfalv6
+    request_header_configuration: null
+    oauth_configuration: null

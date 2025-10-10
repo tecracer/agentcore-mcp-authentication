@@ -1,0 +1,31 @@
+default_agent: blogpost_single_agent_mcp
+agents:
+  blogpost_single_agent_mcp:
+    name: blogpost_single_agent_mcp
+    entrypoint: blogpost_single_agent_mcp_userCred.py
+    platform: linux/arm64
+    container_runtime: none
+    aws:
+      execution_role: arn:aws:iam::***REMOVED***:role/AmazonBedrockAgentCoreSDKRuntime-eu-central-1-973e873ae6
+      execution_role_auto_create: false
+      account: '***REMOVED***'
+      region: eu-central-1
+      ecr_repository: ***REMOVED***.dkr.ecr.eu-central-1.amazonaws.com/bedrock-agentcore-blogpost_single_agent_mcp
+      ecr_auto_create: false
+      network_configuration:
+        network_mode: PUBLIC
+      protocol_configuration:
+        server_protocol: HTTP
+      observability:
+        enabled: true
+    bedrock_agentcore:
+      agent_id: blogpost_single_agent_mcp-PsKIjTAtVK
+      agent_arn: arn:aws:bedrock-agentcore:eu-central-1:***REMOVED***:runtime/blogpost_single_agent_mcp-PsKIjTAtVK
+      agent_session_id: ca932e16-a0ab-442d-b53a-30dbbf782e28
+    codebuild:
+      project_name: bedrock-agentcore-blogpost_single_agent_mcp-builder
+      execution_role: arn:aws:iam::***REMOVED***:role/AmazonBedrockAgentCoreSDKCodeBuild-eu-central-1-973e873ae6
+      source_bucket: bedrock-agentcore-codebuild-sources-***REMOVED***-eu-central-1
+    authorizer_configuration: null
+    request_header_configuration: null
+    oauth_configuration: null
