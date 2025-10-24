@@ -37,7 +37,7 @@ python blogpost_invoke_mcp_tools_userCred.py --name blogpost_mcp_simple_calculat
 
 ```python
 # Update this line in the agent script:
-mcp_server_arn = "arn:aws:bedrock-agentcore:eu-central-1:***REMOVED***:runtime/blogpost_mcp_simple_calculator-{your-id}"
+mcp_server_arn = "arn:aws:bedrock-agentcore:eu-central-1:ACCOUNTID:runtime/blogpost_mcp_simple_calculator-{your-id}"
 ```
 
 ### 5. Deploy Agent with MCP Tools

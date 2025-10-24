@@ -113,8 +113,9 @@ def create_agent() -> Agent:
         # MCP server configuration
         mcp_name = "blogpost_mcp_simple_calculator"
         
-        # Get MCP server URL - this might need to be adjusted based on your actual deployment
-        mcp_server_arn = "arn:aws:bedrock-agentcore:eu-central-1:***REMOVED***:runtime/blogpost_mcp_simple_calculator-9EIzoU5PdV"
+        # Get MCP server URL - UPDATE THIS WITH YOUR ACTUAL ARN FROM .bedrock_agentcore.yaml
+        # Find the ARN in your .bedrock_agentcore.yaml file after running 'agentcore launch'
+        mcp_server_arn = "arn:aws:bedrock-agentcore:eu-central-1:ACCOUNTID:runtime/blogpost_mcp_simple_calculator-DEPLOYMENTID"
         region = "eu-central-1"
         encoded_arn = mcp_server_arn.replace(":", "%3A").replace("/", "%2F")
         mcp_url = f"https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{encoded_arn}/invocations?qualifier=DEFAULT"

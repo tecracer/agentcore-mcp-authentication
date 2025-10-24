@@ -49,35 +49,51 @@ else
   echo "Created App Client: $CLIENT_ID"
 fi
 
+# Get username from environment variable or use default
+COGNITO_USERNAME=${COGNITO_USERNAME:-"mcp-user"}
+
+# Generate a secure random password
+COGNITO_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-24)
+
 # Check if user already exists
-echo "Checking if user '***REMOVED***' already exists..."
+echo "Checking if user '$COGNITO_USERNAME' already exists..."
 USER_EXISTS=$(aws cognito-idp admin-get-user \
   --user-pool-id $POOL_ID \
-  --username "***REMOVED***" \
+  --username "$COGNITO_USERNAME" \
   --region eu-central-1 2>/dev/null | jq -r '.Username' 2>/dev/null || echo "null")
 
-if [ "$USER_EXISTS" = "***REMOVED***" ]; then
-  echo "User '***REMOVED***' already exists"
+if [ "$USER_EXISTS" = "$COGNITO_USERNAME" ]; then
+  echo "User '$COGNITO_USERNAME' already exists"
+  echo "WARNING: Using existing user. If you need to reset the password, do it manually."
 else
-  echo "Creating user '***REMOVED***'..."
+  echo "Creating user '$COGNITO_USERNAME'..."
+  
+  # Generate temporary password
+  TEMP_PASSWORD=$(openssl rand -base64 32 | tr -d "=+/" | cut -c1-24)
+  
   aws cognito-idp admin-create-user \
     --user-pool-id $POOL_ID \
-    --username "***REMOVED***" \
-    --temporary-password "***REMOVED***" \
+    --username "$COGNITO_USERNAME" \
+    --temporary-password "$TEMP_PASSWORD" \
     --region eu-central-1 \
     --message-action SUPPRESS > /dev/null
   
-  echo "Created user: ***REMOVED***"
+  echo "Created user: $COGNITO_USERNAME"
   
   # Set Permanent Password
   aws cognito-idp admin-set-user-password \
     --user-pool-id $POOL_ID \
-    --username "***REMOVED***" \
-    --password "***REMOVED***" \
+    --username "$COGNITO_USERNAME" \
+    --password "$COGNITO_PASSWORD" \
     --region eu-central-1 \
     --permanent > /dev/null
   
   echo "Set permanent password"
+  echo ""
+  echo "IMPORTANT - Save these credentials securely:"
+  echo "Username: $COGNITO_USERNAME"
+  echo "Password: $COGNITO_PASSWORD"
+  echo ""
 fi
 
 # Store configuration in SSM Parameter Store
@@ -99,7 +115,7 @@ aws ssm put-parameter \
 # Store username and password for user-based auth
 aws ssm put-parameter \
   --name "/app/blogpost/mcp/$MCP_NAME/username" \
-  --value "***REMOVED***" \
+  --value "$COGNITO_USERNAME" \
   --type "String" \
   --overwrite \
   --description "Cognito username for $MCP_NAME authentication" \
@@ -107,7 +123,7 @@ aws ssm put-parameter \
 
 aws ssm put-parameter \
   --name "/app/blogpost/mcp/$MCP_NAME/password" \
-  --value "***REMOVED***" \
+  --value "$COGNITO_PASSWORD" \
   --type "SecureString" \
   --overwrite \
   --description "Cognito password for $MCP_NAME authentication" \
